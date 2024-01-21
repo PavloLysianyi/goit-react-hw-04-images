@@ -15,15 +15,17 @@ const App = () => {
   const [hasMoreImages, setHasMoreImages] = useState(false);
 
   useEffect(() => {
+    if (!searchQuery) {
+      return;
+    }
+
     const fetchImagesData = async () => {
       try {
-        if (currentPage !== 1 || searchQuery !== '') {
-          setIsLoading(true);
-          const { images: fetchedImages, hasMoreImages: fetchedHasMoreImages } =
-            await fetchImages(searchQuery, currentPage);
-          setImages(prevImages => [...prevImages, ...fetchedImages]);
-          setHasMoreImages(fetchedHasMoreImages);
-        }
+        setIsLoading(true);
+        const { images: fetchedImages, hasMoreImages: fetchedHasMoreImages } =
+          await fetchImages(searchQuery, currentPage);
+        setImages(prevImages => [...prevImages, ...fetchedImages]);
+        setHasMoreImages(fetchedHasMoreImages);
       } catch (error) {
         console.error('Error fetching images:', error);
       } finally {

@@ -1,15 +1,6 @@
-import React, { useEffect, useCallback } from 'react';
+import React, { useEffect } from 'react';
 
 const Modal = ({ image, onClose }) => {
-  const handleKeyDown = useCallback(
-    e => {
-      if (e.code === 'Escape') {
-        onClose();
-      }
-    },
-    [onClose]
-  );
-
   const handleOverlayClick = e => {
     if (e.target === e.currentTarget) {
       onClose();
@@ -17,13 +8,19 @@ const Modal = ({ image, onClose }) => {
   };
 
   useEffect(() => {
+    const handleKeyDown = e => {
+      if (e.code === 'Escape') {
+        onClose();
+      }
+    };
+
     const onKeyDown = e => handleKeyDown(e);
     window.addEventListener('keydown', onKeyDown);
 
     return () => {
       window.removeEventListener('keydown', onKeyDown);
     };
-  }, [handleKeyDown]);
+  }, [onClose]);
 
   return (
     <div className="Overlay" onClick={handleOverlayClick}>
