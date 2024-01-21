@@ -1,33 +1,40 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 
-class Searchbar extends React.Component {
-  state = {
-    query: '',
-  };
+const Searchbar = ({ onSubmit }) => {
+  const [query, setQuery] = useState('');
 
-  handleSubmit = e => {
+  const handleSubmit = e => {
     e.preventDefault();
-    this.props.onSubmit(this.state.query);
+    onSubmit(query);
   };
 
-  render() {
-    return (
-      <header className="Searchbar">
-        <form className="SearchForm" onSubmit={this.handleSubmit}>
-          <button type="submit" className="SearchForm-button"></button>
-          <input
-            className="SearchForm-input"
-            type="text"
-            autoComplete="off"
-            autoFocus
-            placeholder="Шукати зображення та фотографії"
-            value={this.state.query}
-            onChange={e => this.setState({ query: e.target.value })}
-          />
-        </form>
-      </header>
-    );
-  }
-}
+  useEffect(() => {
+    const handleInputChange = e => {
+      setQuery(e.target.value);
+    };
+
+    document.addEventListener('input', handleInputChange);
+    return () => {
+      document.removeEventListener('input', handleInputChange);
+    };
+  }, []);
+
+  return (
+    <header className="Searchbar">
+      <form className="SearchForm" onSubmit={handleSubmit}>
+        <button type="submit" className="SearchForm-button"></button>
+        <input
+          className="SearchForm-input"
+          type="text"
+          autoComplete="off"
+          autoFocus
+          placeholder="Шукати зображення та фотографії"
+          value={query}
+          onChange={e => setQuery(e.target.value)}
+        />
+      </form>
+    </header>
+  );
+};
 
 export default Searchbar;
